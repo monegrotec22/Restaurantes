@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: perlarestaurantes
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --workers 2 --threads 4 --bind 0.0.0.0:$PORT --timeout 120
+    envVars:
+      - key: CLOUD
+        value: "1"
+      - key: PERLA_MACHINE_ID
+        value: "PERLAWEB"
+      # IMPORTANTE: En el plan FREE de Render el disco es efimero (se borra al redeployar).
+      # La base de datos SQLite se guarda en ./data/ y se pierde en cada despliegue.
+      # Para produccion usa PythonAnywhere (gratis y persistente) o un disco de pago en Render.
